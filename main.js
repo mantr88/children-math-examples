@@ -1,24 +1,49 @@
-import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
+import "./style.css";
+// import javascriptLogo from "./javascript.svg";
+// import viteLogo from "/vite.svg";
 
-document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
-    </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
-`
+const refs = {
+  input: document.getElementById("number-of-exaples"),
+  text: document.getElementById("show-number"),
+  examplesList: document.getElementById("exampleList"),
+};
 
-setupCounter(document.querySelector('#counter'))
+const generateMathExample = (numExamples) => {
+  const examples = [];
+
+  for (let i = 0; i < numExamples; i += 1) {
+    const number1 = Math.floor(Math.random() * 99) + 1;
+    const number2 = Math.floor(Math.random() * 99) + 1;
+    const operator = Math.random() < 0.5 ? "+" : "-";
+    let result;
+
+    if (operator === "+") {
+      result = number1 + number2;
+    } else {
+      const maxNum = Math.max(number1, number2);
+      const minNum = Math.min(number1, number2);
+      result = maxNum - minNum;
+    }
+
+    const example = `${number1} ${operator} ${number2} = `;
+    examples.push({ example, result });
+  }
+
+  return examples;
+};
+
+refs.input.addEventListener("change", chengesNumOfExamples);
+
+function chengesNumOfExamples(event) {
+  refs.text.textContent = `${event.currentTarget.value} шт`;
+  const numExamplesToGenerate = event.currentTarget.value;
+  const mathExamples = generateMathExample(numExamplesToGenerate);
+
+  refs.examplesList.innerHTML = "";
+
+  mathExamples.forEach((exampleObj) => {
+    const listItem = document.createElement("li");
+    listItem.textContent = exampleObj.example;
+    refs.examplesList.appendChild(listItem);
+  });
+}
